@@ -1,0 +1,5 @@
+{
+  "name": "GDP Cloud v2.0 - Gestor de Decretos",
+  "description": "Sistema avanzado para la gestión de permisos administrativos y feriados legales con integración en Google Cloud y IA Gemini 3.",
+  "requestFramePermissions": []
+}
