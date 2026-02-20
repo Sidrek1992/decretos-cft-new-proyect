@@ -8,7 +8,7 @@
 // URLs de Google Apps Script - Centralizado para evitar duplicación
 export const CONFIG = {
     // URL del Web App de Google Apps Script (PA - Permisos)
-    WEB_APP_URL: import.meta.env.VITE_GAS_WEB_APP_URL || 'https://script.google.com/macros/s/AKfycbzFnXNBOFdSn6Gn0Y_uRAikrK6wcQlTCS2Qo-pGqeb_uTLgyrJAf50Rglgml1hzWscRSw/exec',
+    WEB_APP_URL: import.meta.env.VITE_GAS_WEB_APP_URL || 'https://script.google.com/macros/s/AKfycbzpTshmKjY6-DkBOwjXKyiRsHcJDpsigzNNAYnkKcFO3pXWghO37cyrlCVyKGbjmfzh/exec',
 
     // URL del Web App de Google Apps Script (FL - Feriados 1 período)
     WEB_APP_URL_FL: import.meta.env.VITE_GAS_WEB_APP_URL_FL || 'https://script.google.com/macros/s/AKfycbwJobNnBD1nV4_kt8gnBOVMNodznPuD8AGsxtTbUXF6E67RIWDm3Mxwxri3xdC4I9qM/exec',

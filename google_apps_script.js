@@ -114,7 +114,7 @@ function doGet(e) {
 
     // Leer todas las columnas con datos (sin limitar a un número fijo)
     var lastCol = sheet.getLastColumn();
-    var numCols = isEmployees ? 5 : lastCol;
+    var numCols = isEmployees ? 6 : lastCol;
 
     // Leer desde fila 2 hasta la última fila
     var rows = sheet.getRange(2, 1, lastRow - 1, numCols).getValues();
@@ -148,7 +148,7 @@ function doGet(e) {
 function doPost(e) {
   try {
     var payload = JSON.parse(e.postData.contents);
-    
+
     // Procesar según el tipo de acción
     if (payload.action === 'processAI') {
       return handleAIProcessing(payload);
@@ -176,12 +176,12 @@ function handleSpreadsheetSync(payload) {
     // Detectar tipo de sheet por el payload
     var isEmployees = payload.type === 'employees';
     var lastCol = sheet.getLastColumn();
-    var numCols = isEmployees ? 5 : Math.max(lastCol, payload.data && payload.data[0] ? payload.data[0].length : lastCol);
+    var numCols = isEmployees ? 6 : Math.max(lastCol, payload.data && payload.data[0] ? payload.data[0].length : lastCol);
 
     // Validar registros si no son empleados
     if (!isEmployees && payload.validateRecords) {
       var validationErrors = [];
-      payload.data.forEach(function(row, index) {
+      payload.data.forEach(function (row, index) {
         var record = {
           funcionario: row[4],
           rut: row[5],
@@ -195,13 +195,13 @@ function handleSpreadsheetSync(payload) {
           validationErrors.push('Fila ' + (index + 2) + ': ' + validation.errors.join(', '));
         }
       });
-      
+
       if (validationErrors.length > 0) {
         lock.releaseLock();
-        return createJsonResponse({ 
-          success: false, 
-          error: 'Errores de validación', 
-          validationErrors: validationErrors 
+        return createJsonResponse({
+          success: false,
+          error: 'Errores de validación',
+          validationErrors: validationErrors
         });
       }
     }
@@ -292,17 +292,17 @@ function handleAIProcessing(payload) {
   try {
     var apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
     if (!apiKey) {
-      return createJsonResponse({ 
-        success: false, 
-        error: 'API Key de Gemini no configurada. Ejecuta configurarApiKey() primero.' 
+      return createJsonResponse({
+        success: false,
+        error: 'API Key de Gemini no configurada. Ejecuta configurarApiKey() primero.'
       });
     }
 
     var pdfBase64 = payload.pdfBase64;
     var solicitudType = payload.solicitudType || 'PA';
 
-    var prompt = solicitudType === 'PA' 
-      ? getPromptPA() 
+    var prompt = solicitudType === 'PA'
+      ? getPromptPA()
       : getPromptFL();
 
     var requestBody = {
@@ -332,11 +332,11 @@ function handleAIProcessing(payload) {
     });
 
     var result = JSON.parse(response.getContentText());
-    
+
     if (result.error) {
-      return createJsonResponse({ 
-        success: false, 
-        error: 'Error de Gemini: ' + result.error.message 
+      return createJsonResponse({
+        success: false,
+        error: 'Error de Gemini: ' + result.error.message
       });
     }
 
@@ -354,9 +354,9 @@ function handleAIProcessing(payload) {
     });
 
   } catch (e) {
-    return createJsonResponse({ 
-      success: false, 
-      error: 'Error procesando IA: ' + e.toString() 
+    return createJsonResponse({
+      success: false,
+      error: 'Error procesando IA: ' + e.toString()
     });
   }
 }
@@ -442,16 +442,16 @@ function AUTORIZAR_CON_UN_CLIC() {
   // Forzar autorización de lectura
   var file = DriveApp.getFileById(TEMPLATE_DOC_ID);
   var folder = DriveApp.getFolderById(FOLDER_DESTINATION_ID);
-  
+
   // Forzar autorización de escritura/copia
   var testCopy = file.makeCopy("_TEST_AUTORIZACION_BORRAR", folder);
   DriveApp.getFileById(testCopy.getId()).setTrashed(true); // Eliminar copia de prueba
-  
+
   // Forzar autorización de DocumentApp
   DocumentApp.openById(TEMPLATE_DOC_ID);
-  
+
   // Verificar API Key
   verificarApiKey();
-  
+
   Logger.log("✅ Autorización completa (lectura, copia y documentos) exitosa");
 }
